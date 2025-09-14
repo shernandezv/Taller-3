@@ -96,7 +96,7 @@ public class PersistenciaTiquetesJson implements IPersistenciaTiquetes
                 // Al revisar el código de la clase ClienteNatural, no hay nada que tenga que ver con cargar o salvar.
                 // En este caso, la persistencia es una preocupación transversal de la que no se ocupa la clase ClienteNatural
                 String nombre = cliente.getString( NOMBRE_CLIENTE );
-                nuevoCliente = new ClienteNatural( nombre );
+                nuevoCliente = new ClienteNatural( nombre);
             }
             else
             {
