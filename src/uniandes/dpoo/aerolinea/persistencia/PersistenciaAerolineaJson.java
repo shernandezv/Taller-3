@@ -7,8 +7,10 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import uniandes.dpoo.aerolinea.exceptions.AeropuertoDuplicadoException;
 import uniandes.dpoo.aerolinea.modelo.Aerolinea;
 import uniandes.dpoo.aerolinea.modelo.Aeropuerto;
 import uniandes.dpoo.aerolinea.modelo.Avion;
@@ -18,7 +20,7 @@ import uniandes.dpoo.aerolinea.modelo.Vuelo;
 public class PersistenciaAerolineaJson implements IPersistenciaAerolinea{
 
 	@Override
-	public void cargarAerolinea(String archivo, Aerolinea aerolinea) throws IOException {
+	public void cargarAerolinea(String archivo, Aerolinea aerolinea) throws IOException, JSONException, AeropuertoDuplicadoException {
 		String jsonCompleto = new String( Files.readAllBytes( new File( archivo ).toPath( ) ) );
         JSONObject raiz = new JSONObject( jsonCompleto );
 
@@ -28,7 +30,7 @@ public class PersistenciaAerolineaJson implements IPersistenciaAerolinea{
 		
 	}
 
-	private void cargarVuelos(Aerolinea aerolinea, JSONArray jVuelos) {
+	private void cargarVuelos(Aerolinea aerolinea, JSONArray jVuelos) throws JSONException, AeropuertoDuplicadoException {
 		int numVuelos = jVuelos.length( );
         for( int i = 0; i < numVuelos; i++ ) {
         	JSONObject vuelo = jVuelos.getJSONObject( i );
@@ -46,7 +48,7 @@ public class PersistenciaAerolineaJson implements IPersistenciaAerolinea{
 		
 	}
 
-	private void cargarRutas(Aerolinea aerolinea, JSONArray jRutas) {
+	private void cargarRutas(Aerolinea aerolinea, JSONArray jRutas) throws JSONException, AeropuertoDuplicadoException {
 		int numRutas = jRutas.length( );
         for( int i = 0; i < numRutas; i++ ) {
         	JSONObject ruta = jRutas.getJSONObject( i );

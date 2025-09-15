@@ -8,9 +8,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONException;
+
 import java.util.HashSet;
 import java.time.LocalDate;
 
+import uniandes.dpoo.aerolinea.exceptions.AeropuertoDuplicadoException;
 import uniandes.dpoo.aerolinea.exceptions.InformacionInconsistenteException;
 import uniandes.dpoo.aerolinea.exceptions.VueloSobrevendidoException;
 import uniandes.dpoo.aerolinea.modelo.cliente.Cliente;
@@ -217,8 +221,10 @@ public class Aerolinea
      * @throws TipoInvalidoException Se lanza esta excepción si se indica un tipo de archivo inválido
      * @throws IOException Lanza esta excepción si hay problemas leyendo el archivo
      * @throws InformacionInconsistenteException Lanza esta excepción si durante la carga del archivo se encuentra información que no es consistente
+     * @throws AeropuertoDuplicadoException 
+     * @throws JSONException 
      */
-    public void cargarAerolinea( String archivo, String tipoArchivo ) throws TipoInvalidoException, IOException, InformacionInconsistenteException
+    public void cargarAerolinea( String archivo, String tipoArchivo ) throws TipoInvalidoException, IOException, InformacionInconsistenteException, JSONException, AeropuertoDuplicadoException
     {
     	IPersistenciaAerolinea cargador = CentralPersistencia.getPersistenciaAerolinea( tipoArchivo );
         cargador.cargarAerolinea( archivo, this );
@@ -363,8 +369,8 @@ public class Aerolinea
         	calculadora = new CalculadoraTarifasTemporadaAlta();
 
         }
-        
-        return vuelo.venderTiquetes(cliente, calculadora, cantidad);
+        int valor = vuelo.venderTiquetes(cliente, calculadora, cantidad);
+        return valor;
     }
 
     /**
@@ -377,12 +383,18 @@ public class Aerolinea
         Ruta ruta = this.rutas.get(codigoRuta);
         Iterator<Vuelo> iterador = this.vuelos.iterator();
         boolean encontrado = false;
+        Vuelo vuelo = null;
         while (iterador.hasNext() && encontrado == false) {
-        	Vuelo vuelo = iterador.next();
-        	if (vuelo.getFecha().equals(fecha) && vuelo.getRuta().equals(ruta)) {
+        	Vuelo vuelo1 = iterador.next();
+        	if (vuelo1.getFecha().equals(fecha) && vuelo1.getRuta().equals(ruta)) {
         		encontrado = true;
+        		vuelo = vuelo1;
         		iterador.remove();
         	}
+        }
+        
+        for (Tiquete tiquete: vuelo.getTiquetes().values()) {
+        	tiquete.marcarComoUsado(vuelo);
         }
     }
 

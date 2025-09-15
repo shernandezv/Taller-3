@@ -190,5 +190,4 @@ public abstract class ConsolaBasica
             return mostrarMenu( nombreMenu, opciones );
         }
     }
-
 }

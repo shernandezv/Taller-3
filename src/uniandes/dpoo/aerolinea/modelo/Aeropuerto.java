@@ -18,15 +18,21 @@ public class Aeropuerto
     private double latitud;
     private double longitud;
 	private static Set<String> codigosUtilizados = new HashSet<String>();
+	private static final int RADIO_TERRESTRE = 6371;
 
-    public Aeropuerto(String nombre, String codigo, String nombreCiudad, double latitud, double longitud) {
+    public Aeropuerto(String nombre, String codigo, String nombreCiudad, double latitud, double longitud) throws AeropuertoDuplicadoException{
 		super();
 		this.nombre = nombre;
 		this.codigo = codigo;
 		this.nombreCiudad = nombreCiudad;
 		this.latitud = latitud;
 		this.longitud = longitud;
-		codigosUtilizados.add(codigo);
+		if (codigosUtilizados.contains(codigo)) {
+			throw new AeropuertoDuplicadoException("Este aeropuerto ya fue creado");
+		}
+		else {
+			codigosUtilizados.add(codigo);
+		}
 	}
 
 	public String getNombre() {
